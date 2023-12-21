@@ -6,6 +6,7 @@ import json
 import pstats
 import time
 import matplotlib.pyplot as plt
+import platform
 
 def generate_binary_data(length):
     return bytes(bytearray([random.randint(0, 255) for _ in range(length)]))
@@ -73,7 +74,7 @@ def measure_performance(algorithm, sizes):
         profiler = cProfile.Profile()
         profiler.enable()
 
-        size_in_bytes = size * 1024 * 1024
+        size_in_bytes = int(size * 1024 * 1024)
 
         key = generate_binary_data(16)
         data = generate_binary_data(size_in_bytes)
@@ -99,13 +100,13 @@ def update_json_file(file_path, data):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
-def generate_bar_chart(json_data):
+def generate_bar_chart(json_data, system_info):
     # Extract data for plotting
     algorithms = [entry["algorithm"] for entry in json_data]
     sizes = [metric["size"] for metric in json_data[0]["perfMetrics"]]
-    execution_times_aes = [metric["executionTimeInSeconds"] for metric in json_data[0]["perfMetrics"]]
-    execution_times_ascon = [metric["executionTimeInSeconds"] for metric in json_data[1]["perfMetrics"]]
-
+    execution_times_ascon = [metric["executionTimeInSeconds"] for metric in json_data[0]["perfMetrics"]]
+    execution_times_aes = [metric["executionTimeInSeconds"] for metric in json_data[1]["perfMetrics"]]
+    
     # Plotting
     bar_width = 0.35
     index = range(len(sizes))
@@ -117,17 +118,18 @@ def generate_bar_chart(json_data):
     # Add labels, title, and legend
     ax.set_xlabel('Size (MB)')
     ax.set_ylabel('Execution Time (seconds)')
-    ax.set_title('Algorithm Comparison')
+    ax.set_title('Encryption/Decryption Algorithm Comparison on ' + system_info)
     ax.set_xticks([i + bar_width / 2 for i in index])
     ax.set_xticklabels(sizes)
     ax.legend()
 
     # Show the plot
     plt.show()
+    # plt.savefig(f'perfResult-{system_info}.png')
 
 if __name__ == "__main__":
-    algorithms = ["AES-128", "ASCON-128"]
-    data_sizes = [1, 2]  # in MB
+    algorithms = ["ASCON-128", "AES-128"]
+    data_sizes = [0.5, 1, 1.5, 2]  # in MB
 
     performance_data = []
 
@@ -135,7 +137,8 @@ if __name__ == "__main__":
         performance_data.append(measure_performance(algorithm, data_sizes))
 
     # Update the JSON file with performance metrics
-    update_json_file('perfResult.json', performance_data)
+    system_info = f"{platform.system()}-{platform.release()}-{platform.machine()}"    
+    update_json_file(f'perfResult-{system_info}.json', performance_data)
 
     # Generate and display the bar chart
-    generate_bar_chart(performance_data)
+    generate_bar_chart(performance_data, system_info)
