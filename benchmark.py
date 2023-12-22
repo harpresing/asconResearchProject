@@ -171,6 +171,6 @@ if __name__ == "__main__":
     image_sizes = [2.7]
     execute_perf_test(algorithms, image_sizes, "image")
 
-    video_size = [2.7]
+    video_size = [22]
     execute_perf_test(algorithms, video_size, "video")
     
