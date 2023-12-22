@@ -44,15 +44,15 @@ def benchmark_aes(key, data):
 
     return execution_time
 
-def benchmark_ascon(key, data):
+def benchmark_ascon(key, data, variant="Ascon-128"):
     nonce = generate_binary_data(16)
     associateddata = generate_binary_data(32)
 
     profiler = cProfile.Profile()
     profiler.enable()
 
-    ascon_encrypted = encrypt_with_ascon(key, nonce, associateddata, data)
-    ascon_decrypted = decrypt_with_ascon(key, nonce, associateddata, ascon_encrypted)
+    ascon_encrypted = encrypt_with_ascon(key, nonce, associateddata, data, variant)
+    ascon_decrypted = decrypt_with_ascon(key, nonce, associateddata, ascon_encrypted, variant)
 
     profiler.disable()
     stats = pstats.Stats(profiler)
@@ -71,22 +71,18 @@ def measure_performance(algorithm, sizes):
     for size in sizes:
         log(f"Measuring performance for {algorithm} with {size} MB data")
         
-        profiler = cProfile.Profile()
-        profiler.enable()
-
         size_in_bytes = int(size * 1024 * 1024)
 
         key = generate_binary_data(16)
         data = generate_binary_data(size_in_bytes)
 
         if algorithm == "AES-128":
-            benchmark_aes(key, data)
-        else: 
-            benchmark_ascon(key, data)
+            execution_time = benchmark_aes(key, data)
+        elif algorithm == "ASCON-128": 
+            execution_time = benchmark_ascon(key, data)
+        else:
+            execution_time = benchmark_ascon(key, data, "Ascon-128a")    
         
-        profiler.disable()
-        stats = pstats.Stats(profiler)
-        execution_time = stats.total_tt
 
         perf_metrics.append({
             "size": f"{size}MB",
@@ -104,32 +100,37 @@ def generate_bar_chart(json_data, system_info):
     # Extract data for plotting
     algorithms = [entry["algorithm"] for entry in json_data]
     sizes = [metric["size"] for metric in json_data[0]["perfMetrics"]]
-    execution_times_ascon = [metric["executionTimeInSeconds"] for metric in json_data[0]["perfMetrics"]]
-    execution_times_aes = [metric["executionTimeInSeconds"] for metric in json_data[1]["perfMetrics"]]
+    execution_times_ascon_128 = [metric["executionTimeInSeconds"] for metric in json_data[0]["perfMetrics"]]
+    execution_times_ascon_128a = [metric["executionTimeInSeconds"] for metric in json_data[1]["perfMetrics"]]
+    execution_times_aes = [metric["executionTimeInSeconds"] for metric in json_data[2]["perfMetrics"]]
+    
     
     # Plotting
-    bar_width = 0.35
+    bar_width = 0.2
     index = range(len(sizes))
 
     fig, ax = plt.subplots()
     bar1 = ax.bar(index, execution_times_aes, bar_width, label='AES-128')
-    bar2 = ax.bar([i + bar_width for i in index], execution_times_ascon, bar_width, label='ASCON-128')
+    bar2 = ax.bar([i + bar_width for i in index], execution_times_ascon_128, bar_width, label='ASCON-128')
+    bar3 = ax.bar([i + bar_width * 2 for i in index], execution_times_ascon_128a, bar_width, label='ASCON-128a')
+
 
     # Add labels, title, and legend
     ax.set_xlabel('Size (MB)')
     ax.set_ylabel('Execution Time (seconds)')
     ax.set_title('Encryption/Decryption Algorithm Comparison on ' + system_info)
-    ax.set_xticks([i + bar_width / 2 for i in index])
+    ax.set_xticks([i + bar_width for i in index])
     ax.set_xticklabels(sizes)
     ax.legend()
 
     # Show the plot
-    plt.show()
-    # plt.savefig(f'perfResult-{system_info}.png')
+    # plt.show()
+    plt.savefig(f'perfResult-{system_info}.png')
+    plt.close()
 
 if __name__ == "__main__":
-    algorithms = ["ASCON-128", "AES-128"]
-    data_sizes = [0.5, 1, 1.5, 2]  # in MB
+    algorithms = ["ASCON-128", "ASCON-128a", "AES-128"]
+    data_sizes = [0.1, 0.2, 0.3, 0.4]  # in MB
 
     performance_data = []
 
