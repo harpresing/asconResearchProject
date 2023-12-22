@@ -165,7 +165,7 @@ def execute_perf_test(algorithms, data_sizes, input_type):
 
 if __name__ == "__main__":
     algorithms = ["ASCON-128", "ASCON-128a", "AES-128"]
-    data_sizes = [0.1, 0.2, 0.3, 0.4]  # in MB
+    data_sizes = [0.1, 0.4, 0.8, 1.2]  # in MB
     execute_perf_test(algorithms, data_sizes, "text")
 
     image_sizes = [2.7]
