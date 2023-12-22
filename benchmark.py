@@ -63,18 +63,38 @@ def benchmark_ascon(key, data, variant="Ascon-128"):
     return execution_time
 
 def log(msg):
-    print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - {msg}")      
+    print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - {msg}")
+
+def read_data_as_bytes(size):
+    size_in_bytes = int(size * 1024 * 1024)
+    # Image size is 2.7 MB
+    if size == 2.7:
+            image_path = 'resources/IMG_1844.jpeg'
+            with open(image_path, 'rb') as file:
+                binary_data = file.read()
+                data = binary_data
+    # Video size is 22 MB            
+    elif size == 22:
+        video_path = 'resources/IMG_1836.MOV'
+        chunk_size = 1024
+        with open(video_path, 'rb') as file:
+            binary_data = b''
+            while chunk := file.read(chunk_size):
+                binary_data += chunk
+                data = binary_data
+    else:
+        data = generate_binary_data(size_in_bytes)
+    return data
+
 
 def measure_performance(algorithm, sizes):
     perf_metrics = []
 
     for size in sizes:
         log(f"Measuring performance for {algorithm} with {size} MB data")
-        
-        size_in_bytes = int(size * 1024 * 1024)
 
         key = generate_binary_data(16)
-        data = generate_binary_data(size_in_bytes)
+        data = read_data_as_bytes(size)        
 
         if algorithm == "AES-128":
             execution_time = benchmark_aes(key, data)
@@ -96,7 +116,7 @@ def update_json_file(file_path, data):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
-def generate_bar_chart(json_data, system_info):
+def generate_bar_chart(json_data, system_info, input_type):
     # Extract data for plotting
     algorithms = [entry["algorithm"] for entry in json_data]
     sizes = [metric["size"] for metric in json_data[0]["perfMetrics"]]
@@ -125,13 +145,11 @@ def generate_bar_chart(json_data, system_info):
 
     # Show the plot
     # plt.show()
-    plt.savefig(f'perfResult-{system_info}.png')
+    plt.savefig(f'perfResult-{input_type}-{system_info}.png')
     plt.close()
 
-if __name__ == "__main__":
-    algorithms = ["ASCON-128", "ASCON-128a", "AES-128"]
-    data_sizes = [0.1, 0.2, 0.3, 0.4]  # in MB
 
+def execute_perf_test(algorithms, data_sizes, input_type):
     performance_data = []
 
     for algorithm in algorithms:
@@ -139,7 +157,20 @@ if __name__ == "__main__":
 
     # Update the JSON file with performance metrics
     system_info = f"{platform.system()}-{platform.release()}-{platform.machine()}"    
-    update_json_file(f'perfResult-{system_info}.json', performance_data)
+    update_json_file(f'perfResult-{input_type}-{system_info}.json', performance_data)
 
     # Generate and display the bar chart
-    generate_bar_chart(performance_data, system_info)
+    generate_bar_chart(performance_data, system_info, input_type)
+
+
+if __name__ == "__main__":
+    algorithms = ["ASCON-128", "ASCON-128a", "AES-128"]
+    data_sizes = [0.1, 0.2, 0.3, 0.4]  # in MB
+    execute_perf_test(algorithms, data_sizes, "text")
+
+    image_sizes = [2.7]
+    execute_perf_test(algorithms, image_sizes, "image")
+
+    video_size = [2.7]
+    execute_perf_test(algorithms, video_size, "video")
+    
