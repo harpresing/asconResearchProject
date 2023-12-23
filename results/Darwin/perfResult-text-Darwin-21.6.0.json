@@ -1,0 +1,65 @@
+[
+    {
+        "algorithm": "ASCON-128",
+        "perfMetrics": [
+            {
+                "size": "0.1MB",
+                "executionTimeInSeconds": 3.347293758
+            },
+            {
+                "size": "0.4MB",
+                "executionTimeInSeconds": 15.381474748000002
+            },
+            {
+                "size": "0.8MB",
+                "executionTimeInSeconds": 30.991042263
+            },
+            {
+                "size": "1.2MB",
+                "executionTimeInSeconds": 50.534954376
+            }
+        ]
+    },
+    {
+        "algorithm": "ASCON-128a",
+        "perfMetrics": [
+            {
+                "size": "0.1MB",
+                "executionTimeInSeconds": 1.977621058
+            },
+            {
+                "size": "0.4MB",
+                "executionTimeInSeconds": 8.728411297
+            },
+            {
+                "size": "0.8MB",
+                "executionTimeInSeconds": 18.278357875
+            },
+            {
+                "size": "1.2MB",
+                "executionTimeInSeconds": 29.215539015
+            }
+        ]
+    },
+    {
+        "algorithm": "AES-128",
+        "perfMetrics": [
+            {
+                "size": "0.1MB",
+                "executionTimeInSeconds": 4.203771321
+            },
+            {
+                "size": "0.4MB",
+                "executionTimeInSeconds": 16.714808018
+            },
+            {
+                "size": "0.8MB",
+                "executionTimeInSeconds": 33.438654545
+            },
+            {
+                "size": "1.2MB",
+                "executionTimeInSeconds": 50.14206838099999
+            }
+        ]
+    }
+]

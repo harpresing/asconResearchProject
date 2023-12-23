@@ -1,0 +1,29 @@
+[
+    {
+        "algorithm": "ASCON-128",
+        "perfMetrics": [
+            {
+                "size": "3.0MB",
+                "executionTimeInSeconds": 180.575402157
+            }
+        ]
+    },
+    {
+        "algorithm": "ASCON-128a",
+        "perfMetrics": [
+            {
+                "size": "3.0MB",
+                "executionTimeInSeconds": 109.603964119
+            }
+        ]
+    },
+    {
+        "algorithm": "AES-128",
+        "perfMetrics": [
+            {
+                "size": "3.0MB",
+                "executionTimeInSeconds": 133.79176474899998
+            }
+        ]
+    }
+]

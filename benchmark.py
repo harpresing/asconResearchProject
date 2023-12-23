@@ -73,9 +73,9 @@ def read_data_as_bytes(size):
             with open(image_path, 'rb') as file:
                 binary_data = file.read()
                 data = binary_data
-    # Video size is 22 MB            
-    elif size == 22:
-        video_path = 'resources/IMG_1836.MOV'
+    # Video size is 3 MB            
+    elif size == 3.0:
+        video_path = 'resources/IMG_1937.MOV'
         chunk_size = 1024
         with open(video_path, 'rb') as file:
             binary_data = b''
@@ -138,14 +138,14 @@ def generate_bar_chart(json_data, system_info, input_type):
     # Add labels, title, and legend
     ax.set_xlabel('Size (MB)')
     ax.set_ylabel('Execution Time (seconds)')
-    ax.set_title('Encryption/Decryption Algorithm Comparison on ' + system_info)
+    ax.set_title('Encryption Algorithm Comparison on ' + system_info)
     ax.set_xticks([i + bar_width for i in index])
     ax.set_xticklabels(sizes)
     ax.legend()
 
     # Show the plot
     # plt.show()
-    plt.savefig(f'perfResult-{input_type}-{system_info}.png')
+    plt.savefig(f'results/{platform.system()}/perfResult-{input_type}-{system_info}.png')
     plt.close()
 
 
@@ -156,8 +156,8 @@ def execute_perf_test(algorithms, data_sizes, input_type):
         performance_data.append(measure_performance(algorithm, data_sizes))
 
     # Update the JSON file with performance metrics
-    system_info = f"{platform.system()}-{platform.release()}-{platform.machine()}"    
-    update_json_file(f'perfResult-{input_type}-{system_info}.json', performance_data)
+    system_info = f"{platform.system()}-{platform.release()}"    
+    update_json_file(f'results/{platform.system()}/perfResult-{input_type}-{system_info}.json', performance_data)
 
     # Generate and display the bar chart
     generate_bar_chart(performance_data, system_info, input_type)
@@ -171,6 +171,6 @@ if __name__ == "__main__":
     image_sizes = [2.7]
     execute_perf_test(algorithms, image_sizes, "image")
 
-    video_size = [22]
+    video_size = [3.0]
     execute_perf_test(algorithms, video_size, "video")
     
