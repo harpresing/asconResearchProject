@@ -1,86 +1,40 @@
-Python implementation of Ascon
-==============================
+# Research Project in Lightweight Cryptography
 
-This is a Python3 implementation of Ascon v1.2, an authenticated cipher and hash function.
+This repository containes source code for the research project in lightweight cryptography.
 
-https://github.com/meichlseder/pyascon
++ `Student Name`: Harpreet Singh
++ `Student ID`: B00158316
++ `Course`: MACS H6014
 
-Ascon
------
+## Structure of the repository
 
-Ascon is a family of [authenticated encryption](https://en.wikipedia.org/wiki/Authenticated_encryption) (AEAD) and [hashing](https://en.wikipedia.org/wiki/Cryptographic_hash_function) algorithms designed to be lightweight and easy to implement, even with added countermeasures against side-channel attacks.
-It was designed by a team of cryptographers from Graz University of Technology, Infineon Technologies, and Radboud University: Christoph Dobraunig, Maria Eichlseder, Florian Mendel, and Martin Schläffer.
+The repository contains the following files:
 
-Ascon has been selected as the standard for lightweight cryptography in the [NIST Lightweight Cryptography competition (2019–2023)](https://csrc.nist.gov/projects/lightweight-cryptography) and as the primary choice for lightweight authenticated encryption in the final portfolio of the [CAESAR competition (2014–2019)](https://competitions.cr.yp.to/caesar-submissions.html).
+1. `ascon.py` - Taken from the original [repository](https://github.com/meichlseder/pyascon/tree/5ee786cdc8a74d9c0f7b3c81f99f5dcb5490ca00) which implements Ascon v1.2 in Python 3. This implementation was submitted to the NIST LWC competition. The following functions that implement `Authenticated Encryption` were used from the file as part of the research project:
 
-Find more information, including the specification and more implementations here:
+    - ascon_encrypt(key, nonce, associateddata, plaintext, variant)
+    - ascon_decrypt(key, nonce, associateddata, ciphertext, variant)
 
-https://ascon.iaik.tugraz.at/
+2. `aes.py` - Implements AES-128 in Python 3. `CBC mode` is used for encryption and decryption followed by `HMAC-SHA256` for authentication. This implementation was taken from this [repository](https://github.com/boppreh/aes). The following functions were used from the file as part of the research project:
+    - aes_encrypt(key, plaintext)
+    - aes_decrypt(key, ciphertext)
 
+3. `benchmark.py` - This file contains the code for benchmarking the performance of `Authenticated Encryption` performed by ASCON-128, ASCON-128a and AES-128. It uses `cProfile` to measure execution times and the results are stored in the results directory based on which environment the code is executed on. We executed the benchmarking on two environments:
+    - Raspberry Pi VM (Debian 11, (4GB RAM, 4 virtual Processors) - Image taken from [here](https://downloads.raspberrypi.com/rpd_x86/images/rpd_x86-2022-07-04/2022-07-01-raspios-bullseye-i386.iso). The VM was created using VirtualBox.
+    - MacBook Pro (15-inch, 2015) (2.2 GHz Quad-Core Intel Core i7, 16 GB 1600 MHz DDR3)
 
-Algorithms
-----------
-
-This is a simple reference implementation of Ascon v1.2 as submitted to the NIST LWC competition that includes 
-
-  * Authenticated encryption `ascon_encrypt(key, nonce, associateddata, plaintext, variant="Ascon-128")` (and similarly `decrypt`) with the following 3 family members:
-
-    - `Ascon-128`
-    - `Ascon-128a`
-    - `Ascon-80pq`
-  
-  * Hashing algorithms `ascon_hash(message, variant="Ascon-Hash", hashlength=32)` including 4 hash function variants with fixed 256-bit (`Hash`) or variable (`Xof`) output lengths:
-
-    - `Ascon-Hash`
-    - `Ascon-Hasha`
-    - `Ascon-Xof`
-    - `Ascon-Xofa`
-  
-  * Message authentication codes `ascon_mac(key, message, variant="Ascon-Mac", taglength=16)` including 5 MAC variants (from https://eprint.iacr.org/2021/1574, not part of the LWC proposal) with fixed 128-bit (`Mac`) or variable (`Prf`) output lengths, including a variant for short messages of up to 128 bits (`PrfShort`).
-
-    - `Ascon-Mac`
-    - `Ascon-Maca`
-    - `Ascon-Prf`
-    - `Ascon-Prfa`
-    - `Ascon-PrfShort`
-
-Files
------
-
-  * `ascon.py`: 
-    Implements all family members as well as the underlying permutation:
-
-    - `ascon_encryption()`/`ascon_decrypt()` for authenticated encryption,
-    - `ascon_hash()` for hashing,
-    - `ascon_mac()` for message authentication,
-    - `ascon_permutation()` for the underlying permutation.
-
-    By default, prints the results of encrypting and hashing some example strings.
-
-    - `debug = True|False`: Set this variable to print the intermediate state after each phase of the encryption/hashing process.
-    - `debugpermutation = True|False`: Set this variable to print the intermediate state after each step of the permutation's round function.
+The execution results are stored json files and subsequently used for plotting the graphs.
 
 
-  * `genkat.py`:
-    Produces result files for the Known Answer Tests (KATs) defined for the [NIST LWC competition](https://csrc.nist.gov/projects/lightweight-cryptography) ([call for algorithms](https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/final-lwc-submission-requirements-august2018.pdf), [test vector generation code](https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/TestVectorGen.zip)).
+## How to run the code
 
-    Call with the name of the target algorithm (see above) as first parameter, default is `Ascon-128`:
-
-    ```sh
-    python3 genkat.py Ascon-128
-
+1. Install the required dependencies using the following command:
+    
+    ```bash
+    pip3 install -r requirements.txt --user
     ```
-
-    Results are written to 
-
-    - `LWC_AEAD_KAT_{klenbits}_{nlenbits}.txt` for authenticated encryption,
-    - `LWC_HASH_KAT_{hlenbits}.txt` for hashing,
-    - `LWC_AUTH_KAT_128_128.txt` for message authentication codes.
-
-    Additionally, a JSON version of the same data is written to the corresponding `.json` files.
-    Note that this may overwrite KATs for other variants which share the same parameters.
-
-
-  * `writer.py`:
-    Helper code for `genkat.py` that specifies the text and JSON encoding.
-
+2. Run the benchmarking code using the following command:
+    
+    ```bash
+    python3 benchmark.py
+    ```    
