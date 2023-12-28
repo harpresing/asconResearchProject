@@ -46,7 +46,7 @@ def benchmark_aes(key, data):
 
 def benchmark_ascon(key, data, variant="Ascon-128"):
     nonce = generate_binary_data(16)
-    associateddata = generate_binary_data(32)
+    associateddata = generate_binary_data(0)
 
     profiler = cProfile.Profile()
     profiler.enable()
@@ -138,7 +138,7 @@ def generate_bar_chart(json_data, system_info, input_type):
     # Add labels, title, and legend
     ax.set_xlabel('Size (MB)')
     ax.set_ylabel('Execution Time (seconds)')
-    ax.set_title('Encryption Algorithm Comparison on ' + system_info)
+    ax.set_title('Authenticated Encryption Comparison on ' + system_info)
     ax.set_xticks([i + bar_width for i in index])
     ax.set_xticklabels(sizes)
     ax.legend()

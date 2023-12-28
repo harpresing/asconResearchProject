@@ -4,19 +4,19 @@
         "perfMetrics": [
             {
                 "size": "0.1MB",
-                "executionTimeInSeconds": 3.347293758
+                "executionTimeInSeconds": 3.028532174
             },
             {
                 "size": "0.4MB",
-                "executionTimeInSeconds": 15.381474748000002
+                "executionTimeInSeconds": 13.675128044000001
             },
             {
                 "size": "0.8MB",
-                "executionTimeInSeconds": 30.991042263
+                "executionTimeInSeconds": 29.708237364000006
             },
             {
                 "size": "1.2MB",
-                "executionTimeInSeconds": 50.534954376
+                "executionTimeInSeconds": 48.88105722000001
             }
         ]
     },
@@ -25,19 +25,19 @@
         "perfMetrics": [
             {
                 "size": "0.1MB",
-                "executionTimeInSeconds": 1.977621058
+                "executionTimeInSeconds": 2.144597794000001
             },
             {
                 "size": "0.4MB",
-                "executionTimeInSeconds": 8.728411297
+                "executionTimeInSeconds": 9.289981150000003
             },
             {
                 "size": "0.8MB",
-                "executionTimeInSeconds": 18.278357875
+                "executionTimeInSeconds": 19.774294096000002
             },
             {
                 "size": "1.2MB",
-                "executionTimeInSeconds": 29.215539015
+                "executionTimeInSeconds": 31.875527687999995
             }
         ]
     },
@@ -46,19 +46,19 @@
         "perfMetrics": [
             {
                 "size": "0.1MB",
-                "executionTimeInSeconds": 4.203771321
+                "executionTimeInSeconds": 4.56198792
             },
             {
                 "size": "0.4MB",
-                "executionTimeInSeconds": 16.714808018
+                "executionTimeInSeconds": 18.313247432
             },
             {
                 "size": "0.8MB",
-                "executionTimeInSeconds": 33.438654545
+                "executionTimeInSeconds": 36.78472003600001
             },
             {
                 "size": "1.2MB",
-                "executionTimeInSeconds": 50.14206838099999
+                "executionTimeInSeconds": 55.525889903
             }
         ]
     }
